@@ -29,7 +29,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const mockUser: User = {
         id: '1',
         email,
-        name: email.split('@')[0]
+        name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1)
       };
       
       setUser(mockUser);
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const mockUser: User = {
         id: '1',
         email,
-        name
+        name: name.charAt(0).toUpperCase() + name.slice(1)
       };
       
       setUser(mockUser);

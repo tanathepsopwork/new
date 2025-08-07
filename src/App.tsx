@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { Header } from './components/Header';
 import { Home } from './pages/Home';
 import { Price } from './pages/Price';
 import { Contact } from './pages/Contact';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { Dashboard } from './pages/Dashboard';
 
 function App() {
   return (
@@ -16,6 +18,14 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <>
+                  <Header />
+                  <Dashboard />
+                </>
+              </ProtectedRoute>
+            } />
             <Route path="/*" element={
               <>
                 <Header />

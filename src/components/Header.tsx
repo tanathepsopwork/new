@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export function Header() {
@@ -47,6 +47,17 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
+                <Link
+                  to="/dashboard"
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                    isActive('/dashboard') 
+                      ? 'bg-blue-600 text-white' 
+                      : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                  }`}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Dashboard</span>
+                </Link>
                 <div className="flex items-center space-x-2 text-slate-300">
                   <User className="w-4 h-4" />
                   <span className="text-sm">{user.name}</span>
