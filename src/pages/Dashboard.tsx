@@ -16,7 +16,13 @@ import {
   Trash2,
   Calendar,
   TrendingUp,
-  Activity
+  Activity,
+  Wallet,
+  QrCode,
+  Smartphone,
+  Gift,
+  Hash,
+  X
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -35,6 +41,9 @@ export function Dashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('websites');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [userCredit, setUserCredit] = useState(15750); // Mock user credit
 
   const websites: Website[] = [
     {
@@ -112,6 +121,41 @@ export function Dashboard() {
     { id: 'support', label: 'Support', icon: HelpCircle }
   ];
 
+  const paymentMethods = [
+    {
+      id: 'qr',
+      name: 'เติมเงินผ่าน QR Code',
+      description: 'สแกน QR Code เพื่อชำระเงิน',
+      icon: QrCode,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/10'
+    },
+    {
+      id: 'truemoney',
+      name: 'เติมเงินผ่าน TrueMoney',
+      description: 'ชำระผ่าน TrueMoney Wallet',
+      icon: Smartphone,
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/10'
+    },
+    {
+      id: 'angpao',
+      name: 'เติมเงินด้วยอั่งเปา',
+      description: 'ใช้อั่งเปาสำหรับเติมเงิน',
+      icon: Gift,
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/10'
+    },
+    {
+      id: 'code',
+      name: 'เติมเงินผ่านโค้ด',
+      description: 'กรอกโค้ดเติมเงินของคุณ',
+      icon: Hash,
+      color: 'text-purple-400',
+      bgColor: 'bg-purple-500/10'
+    }
+  ];
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'text-green-400 bg-green-500/10';
@@ -120,6 +164,67 @@ export function Dashboard() {
       default: return 'text-gray-400 bg-gray-500/10';
     }
   };
+
+  const handlePaymentMethodSelect = (methodId: string) => {
+    setSelectedPaymentMethod(methodId);
+    // Here you would implement the actual payment logic
+    console.log('Selected payment method:', methodId);
+  };
+
+  const PaymentModal = () => (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-slate-800 rounded-2xl border border-slate-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-slate-700">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-white">เติมเงิน</h2>
+            <button
+              onClick={() => setShowPaymentModal(false)}
+              className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-slate-400" />
+            </button>
+          </div>
+          <p className="text-slate-400 mt-2">เลือกวิธีการเติมเงินที่คุณต้องการ</p>
+        </div>
+        
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {paymentMethods.map((method) => {
+              const IconComponent = method.icon;
+              return (
+                <button
+                  key={method.id}
+                  onClick={() => handlePaymentMethodSelect(method.id)}
+                  className="p-6 bg-slate-700/50 hover:bg-slate-700 rounded-xl border border-slate-600 hover:border-slate-500 transition-all text-left group"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className={`p-3 rounded-lg ${method.bgColor}`}>
+                      <IconComponent className={`w-6 h-6 ${method.color}`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold mb-1 group-hover:text-blue-400 transition-colors">
+                        {method.name}
+                      </h3>
+                      <p className="text-slate-400 text-sm">{method.description}</p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          
+          <div className="mt-6 p-4 bg-slate-700/30 rounded-lg">
+            <h4 className="text-white font-medium mb-2">ข้อมูลสำคัญ</h4>
+            <ul className="text-slate-400 text-sm space-y-1">
+              <li>• เครดิตจะเข้าระบบภายใน 5-10 นาที</li>
+              <li>• ขั้นต่ำในการเติมเงิน 100 บาท</li>
+              <li>• สามารถติดต่อฝ่ายสนับสนุนได้ตลอด 24 ชั่วโมง</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderWebsitesTab = () => (
     <div className="space-y-6">
@@ -326,6 +431,32 @@ export function Dashboard() {
           </p>
         </div>
 
+        {/* Credit Display and Top Up Button */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-blue-500/10 to-teal-500/10 p-6 rounded-2xl border border-blue-500/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-blue-500/20 rounded-xl">
+                  <Wallet className="w-8 h-8 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-1">เครดิตของคุณ</h3>
+                  <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">
+                    ฿{userCredit.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowPaymentModal(true)}
+                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-teal-600 transition-all transform hover:scale-105"
+              >
+                <Plus className="w-5 h-5" />
+                <span>เติมเงิน</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => {
@@ -377,6 +508,9 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+      
+      {/* Payment Modal */}
+      {showPaymentModal && <PaymentModal />}
     </div>
   );
 }
