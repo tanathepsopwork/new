@@ -180,22 +180,3 @@ export function TestimonialsSection() {
     </section>
   );
 }
-                    {feature.title}
-                  </h3>
-                  
-                  <p className="text-slate-300 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-                
-                {/* Decorative elements */}
-                <div className="absolute top-4 right-4 w-2 h-2 bg-white/20 rounded-full"></div>
-                <div className="absolute bottom-4 right-8 w-1 h-1 bg-white/10 rounded-full"></div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
