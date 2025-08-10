@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Chrome, AtSign } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export function Register() {
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -14,7 +15,7 @@ export function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   
-  const { register, isLoading } = useAuth();
+  const { register, loginWithGoogle, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,10 +33,20 @@ export function Register() {
     }
     
     try {
-      await register(formData.name, formData.email, formData.password);
+      await register(formData.name, formData.email, formData.password, formData.username);
       navigate('/dashboard');
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      setError((err as Error).message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    try {
+      await loginWithGoogle();
+      navigate('/dashboard');
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -84,6 +95,24 @@ export function Register() {
                   required
                   className="w-full pl-10 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Your full name"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <AtSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="username (ไม่บังคับ)"
                 />
               </div>
             </div>
@@ -184,6 +213,25 @@ export function Register() {
               className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isLoading ? 'Creating account...' : 'Create account'}
+            </button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-600"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-slate-800 text-slate-400">หรือ</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-white text-slate-900 font-semibold rounded-lg hover:bg-slate-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Chrome className="w-5 h-5" />
+              <span>สมัครด้วย Google</span>
             </button>
           </form>
 

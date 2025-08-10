@@ -27,6 +27,14 @@ export function Header() {
               Home
             </Link>
             <Link 
+              to="/services" 
+              className={`transition-colors duration-300 ${
+                isActive('/services') ? 'text-blue-400' : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Services
+            </Link>
+            <Link 
               to="/price" 
               className={`transition-colors duration-300 ${
                 isActive('/price') ? 'text-blue-400' : 'text-slate-300 hover:text-white'
@@ -58,8 +66,18 @@ export function Header() {
                   <LayoutDashboard className="w-4 h-4" />
                   <span>Dashboard</span>
                 </Link>
-                <div className="flex items-center space-x-2 text-slate-300">
+                <Link
+                  to="/profile"
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                    isActive('/profile') 
+                      ? 'bg-blue-600 text-white' 
+                      : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                  }`}
+                >
                   <User className="w-4 h-4" />
+                  <span>Profile</span>
+                </Link>
+                <div className="flex items-center space-x-2 text-slate-300">
                   <span className="text-sm">{user.name}</span>
                 </div>
                 <button

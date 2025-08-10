@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Chrome } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export function Login() {
@@ -11,7 +11,7 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   
-  const { login, isLoading } = useAuth();
+  const { login, loginWithGoogle, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,7 +22,17 @@ export function Login() {
       await login(formData.email, formData.password);
       navigate('/dashboard');
     } catch (err) {
-      setError('Invalid email or password');
+      setError((err as Error).message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    try {
+      await loginWithGoogle();
+      navigate('/dashboard');
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -120,6 +130,25 @@ export function Login() {
               className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
+            </button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-600"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-slate-800 text-slate-400">หรือ</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-white text-slate-900 font-semibold rounded-lg hover:bg-slate-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Chrome className="w-5 h-5" />
+              <span>เข้าสู่ระบบด้วย Google</span>
             </button>
           </form>
 

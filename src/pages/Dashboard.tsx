@@ -117,7 +117,6 @@ export function Dashboard() {
     { id: 'websites', label: 'My Websites', icon: Globe },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'billing', label: 'Billing', icon: CreditCard },
-    { id: 'settings', label: 'Settings', icon: Settings },
     { id: 'support', label: 'Support', icon: HelpCircle }
   ];
 
